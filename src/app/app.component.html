@@ -1,0 +1,112 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div>
+  <h1>
+    Breadcrumb
+  </h1>
+  <div>
+    <div class="breadcrumbs-form-group">
+      <ng-select
+        class="advertisers"
+        [items]="advertisers"
+        bindLabel="name"
+        bindValue="id"
+        labelForId="state"
+        [clearAllText]="advertisersConfig.dropDownSettings.clearAllText"
+        [clearable]="advertisersConfig.dropDownSettings.clearable"
+        [closeOnSelect]="advertisersConfig.dropDownSettings.closeOnSelect"
+        [loading]="advertisersConfig.dropDownSettings.loading"
+        [loadingText]="advertisersConfig.dropDownSettings.loadingText"
+        [maxSelectedItems]="advertisersConfig.dropDownSettings.maxSelectedItems"
+        [multiple]="advertisersConfig.dropDownSettings.multiple"
+        [notFoundText]="advertisersConfig.dropDownSettings.notFoundText"
+        [placeholder]="advertisersConfig.dropDownSettings.placeholder"
+        [searchable]="advertisersConfig.dropDownSettings.searchable"
+        [virtualScroll]="advertisersConfig.dropDownSettings.virtualScroll"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-index="index"
+        >
+          <input
+            id="item-{{index}}"
+            type="checkbox"
+            [ngModel]="item$.selected"
+          />
+          {{item.name}}
+        </ng-template>
+      </ng-select>
+      <ng-select
+        class="campaigns"
+        [items]="campaigns"
+        bindLabel="name"
+        bindValue="id"
+        labelForId="state"
+        [clearAllText]="campaignConfig.dropDownSettings.clearAllText"
+        [clearable]="campaignConfig.dropDownSettings.clearable"
+        [closeOnSelect]="campaignConfig.dropDownSettings.closeOnSelect"
+        [loading]="campaignConfig.dropDownSettings.loading"
+        [loadingText]="campaignConfig.dropDownSettings.loadingText"
+        [maxSelectedItems]="campaignConfig.dropDownSettings.maxSelectedItems"
+        [multiple]="campaignConfig.dropDownSettings.multiple"
+        [notFoundText]="campaignConfig.dropDownSettings.notFoundText"
+        [placeholder]="campaignConfig.dropDownSettings.placeholder"
+        [searchable]="campaignConfig.dropDownSettings.searchable"
+        [virtualScroll]="campaignConfig.dropDownSettings.virtualScroll"
+        [style]="campaignDropdownStyles"
+      >
+      </ng-select>
+      <div class="daterangePicker">
+        <ngx-daterangepicker-material
+          *ngIf="datepickerConfig.isInlinePicker"
+          [locale]="{
+            applyLabel: datepickerConfig.applyLabel,
+            cancelLabel: datepickerConfig.cancelLabel,
+            customRangeLabel: datepickerConfig.customRangeLabel,
+            daysOfWeek: datepickerConfig.daysOfWeek,
+            direction: datepickerConfig.direction,
+            firstDay: datepickerConfig.firstDay,
+            format: datepickerConfig.format,
+            monthNames: datepickerConfig.monthNames,
+            separator: datepickerConfig.separator,
+            weekLabel: datepickerConfig.weekLabel
+          }"
+          [showCancel]="datepickerConfig.showCancel"
+          [showClearButton]="datepickerConfig.showClearButton"
+          [showDropdowns]="datepickerConfig.showDropdowns"
+          [showWeekNumbers]="datepickerConfig.showWeekNumbers"
+        >
+        </ngx-daterangepicker-material>
+        <input
+          *ngIf="!datepickerConfig.isInlinePicker"
+          type="text"
+          matInput
+          ngxDaterangepickerMd
+          [locale]="{
+            applyLabel: datepickerConfig.applyLabel,
+            cancelLabel: datepickerConfig.cancelLabel,
+            customRangeLabel: datepickerConfig.customRangeLabel,
+            daysOfWeek: datepickerConfig.daysOfWeek,
+            direction: datepickerConfig.direction,
+            firstDay: datepickerConfig.firstDay,
+            format: datepickerConfig.format,
+            monthNames: datepickerConfig.monthNames,
+            separator: datepickerConfig.separator,
+            weekLabel: datepickerConfig.weekLabel
+          }"
+          [showCancel]="datepickerConfig.showCancel"
+          [showClearButton]="datepickerConfig.showClearButton"
+          [showDropdowns]="datepickerConfig.showDropdowns"
+          [showWeekNumbers]="datepickerConfig.showWeekNumbers"
+          [startKey]="datepickerConfig.startKey"
+          [endKey]="datepickerConfig.endKey"
+          name="daterange"
+          [placeholder]="datepickerConfig.placeholder || 'Choose date range'"
+          drops="down"
+          position="left"
+        />
+      </div>
+    </div>
+  </div>
+</div>
