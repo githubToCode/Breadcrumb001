@@ -6,7 +6,7 @@ const breadcrumbConfig = {
       closeOnSelect: false,
       loading: false,
       loadingText: "Loading Advertisers",
-      maxSelectedItems: 10,
+      maxSelectedItems: 6,
       multiple: true,
       notFoundText: "No Advertisers Found",
       placeholder: "Select Advertisers",
