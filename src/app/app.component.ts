@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import * as moment from "moment";
 
 import { breadcrumbConfig } from "./config";
+import { AppService } from "./app.service";
 
 @Component({
   selector: "app-root",
@@ -10,6 +12,7 @@ import { breadcrumbConfig } from "./config";
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
+  private dateFormat = "DD-MM-YYYY";
   public config = breadcrumbConfig;
   public advertisersConfig = this.config.advertisers;
   public campaignConfig = this.config.campaigns;
@@ -19,37 +22,75 @@ export class AppComponent implements OnInit {
   public daterangePickerStyles = "";
 
   breadcrumbsForm: FormGroup;
-  advertisers: any[] = [
-    { id: "adv001", name: "Adv One", group: "Select ALL" },
-    { id: "adv002", name: "Adv Two", group: "Select ALL" },
-    { id: "adv003", name: "Adv Three", group: "Select ALL" },
-    { id: "adv004", name: "Adv Four", group: "Select ALL" },
-    { id: "adv005", name: "Adv Five", group: "Select ALL" },
-    { id: "adv006", name: "Adv Six", group: "Select ALL" },
-    { id: "adv007", name: "Adv Seven", group: "Select ALL" },
-    { id: "adv008", name: "Adv Eight", group: "Select ALL" }
-  ];
-  campaigns: any[] = [
-    { id: "cmp001", name: "Cmpn One", group: "Select ALL" },
-    { id: "cmp002", name: "Cmpn Two", group: "Select ALL" },
-    { id: "cmp003", name: "Cmpn Three", group: "Select ALL" },
-    { id: "cmp004", name: "Cmpn Four", group: "Select ALL" },
-    { id: "cmp005", name: "Cmpn Five", group: "Select ALL" },
-    { id: "cmp006", name: "Cmpn Six", group: "Select ALL" },
-    { id: "cmp007", name: "Cmpn Seven", group: "Select ALL" },
-    { id: "cmp008", name: "Cmpn Eight", group: "Select ALL" }
-  ];
+  advertisers: any[] = [];
+  selectedAdvertisers: any[] = [];
+  campaigns: any[] = [];
+  selectedCampaigns: any[] = [];
+  selectedDateRange: object = {
+    [this.datepickerConfig.startKey || "start"]: moment().subtract(1, "months"),
+    [this.datepickerConfig.endKey || "end"]: moment()
+  };
+  breadcrumbsReqPayload: object = {};
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private appService: AppService) {}
 
   ngOnInit() {
-    // this.breadcrumbsForm = this.fb.group({
-    //   selectAllAdvertiserIds: false,
-    //   selectedAdvertiserIds: [],
-    //   selectedCampaignIds: []
-    // });
-
+    this.getAdvertisers();
     this.appendStyles();
+  }
+
+  getAdvertisers(): void {
+    this.appService.getAdvertisers().subscribe((advertisers) => {
+      this.advertisers = advertisers;
+      this.selectedAdvertisers = [advertisers[0].id];
+      this.updateReqPayload();
+      console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+      this.getCampaigns();
+    });
+  }
+
+  getCampaigns(): void {
+    this.selectedCampaigns = [];
+    this.appService
+      .getCampaigns(this.breadcrumbsReqPayload)
+      .subscribe((campaigns) => {
+        console.log("Got New Campaigns");
+        this.campaigns = campaigns;
+      });
+  }
+
+  onAdvertisersSelectionChange(): void {
+    this.getCampaigns();
+    this.updateReqPayload();
+    console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+  }
+
+  onCampaignsSelectionChange(): void {
+    this.updateReqPayload();
+    console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+  }
+
+  dateRangeUpdated(): void {
+    this.getCampaigns();
+    this.updateReqPayload();
+    console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+  }
+
+  updateReqPayload(): void {
+    this.breadcrumbsReqPayload = {
+      startDate: this.selectedDateRange[
+        this.datepickerConfig.startKey || "start"
+      ].format(this.dateFormat),
+      endDate: this.selectedDateRange[
+        this.datepickerConfig.endKey || "end"
+      ].format(this.dateFormat),
+      ...(this.selectedAdvertisers.length > 0 && {
+        advertiserUIds: this.selectedAdvertisers
+      }),
+      ...(this.selectedCampaigns.length > 0 && {
+        campaignUIds: this.selectedCampaigns
+      })
+    };
   }
 
   appendStyles() {
@@ -163,9 +204,5 @@ export class AppComponent implements OnInit {
       return initialValue;
     }, initialValue);
     return initialValue + " }";
-  }
-
-  choosedDate(a, b, c) {
-    console.log("choosedDate", a, b, c);
   }
 }

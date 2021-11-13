@@ -21,6 +21,8 @@
         [placeholder]="advertisersConfig.dropDownSettings.placeholder"
         [searchable]="advertisersConfig.dropDownSettings.searchable"
         [virtualScroll]="advertisersConfig.dropDownSettings.virtualScroll"
+        [(ngModel)]="selectedAdvertisers"
+        (change)="onAdvertisersSelectionChange()"
       >
         <ng-template
           ng-option-tmp
@@ -54,6 +56,8 @@
         [searchable]="campaignConfig.dropDownSettings.searchable"
         [virtualScroll]="campaignConfig.dropDownSettings.virtualScroll"
         [style]="campaignDropdownStyles"
+        [(ngModel)]="selectedCampaigns"
+        (change)="onCampaignsSelectionChange()"
       >
       </ng-select>
       <div class="daterangePicker">
@@ -75,6 +79,8 @@
           [showClearButton]="datepickerConfig.showClearButton"
           [showDropdowns]="datepickerConfig.showDropdowns"
           [showWeekNumbers]="datepickerConfig.showWeekNumbers"
+          [(ngModel)]="selectedDateRange"
+          (datesUpdated)="dateRangeUpdated()"
         >
         </ngx-daterangepicker-material>
         <input
@@ -98,12 +104,14 @@
           [showClearButton]="datepickerConfig.showClearButton"
           [showDropdowns]="datepickerConfig.showDropdowns"
           [showWeekNumbers]="datepickerConfig.showWeekNumbers"
-          [startKey]="datepickerConfig.startKey"
-          [endKey]="datepickerConfig.endKey"
+          [startKey]="datepickerConfig.startKey || 'start'"
+          [endKey]="datepickerConfig.endKey || 'end'"
           name="daterange"
           [placeholder]="datepickerConfig.placeholder || 'Choose date range'"
           drops="down"
           position="left"
+          [(ngModel)]="selectedDateRange"
+          (datesUpdated)="dateRangeUpdated()"
         />
       </div>
     </div>

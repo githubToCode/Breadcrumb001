@@ -101,7 +101,7 @@ const breadcrumbConfig = {
     direction: "ltr",
     endDate: "2021-10-27T06:59:59.999Z",
     firstDay: 0,
-    format: "MM/DD/YYYY",
+    format: "DD-MM-YYYY",
     isInlinePicker: false,
     maxDate: "2021-10-31T06:59:59.999Z",
     monthNames: [
@@ -124,6 +124,8 @@ const breadcrumbConfig = {
     showDropdowns: true,
     showWeekNumbers: false,
     startDate: "2021-09-26T07:00:00.000Z",
+    startKey: "startDate",
+    endKey: "endDate",
     stylesConfig: {
       calendar: {
         "background-color": "white",
