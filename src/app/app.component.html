@@ -33,6 +33,7 @@
           <input
             id="item-{{index}}"
             type="checkbox"
+            [disabled]="!item$.selected && selectedAdvertisers.length >= advertisersConfig.dropDownSettings.maxSelectedItems"
             [ngModel]="item$.selected"
           />
           {{item.name}}
@@ -59,6 +60,20 @@
         [(ngModel)]="selectedCampaigns"
         (change)="onCampaignsSelectionChange()"
       >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-index="index"
+        >
+          <input
+            id="item-{{index}}"
+            type="checkbox"
+            [disabled]="!item$.selected && selectedCampaigns.length >= campaignConfig.dropDownSettings.maxSelectedItems"
+            [ngModel]="item$.selected"
+          />
+          {{item.name}}
+        </ng-template>
       </ng-select>
       <div class="daterangePicker">
         <ngx-daterangepicker-material

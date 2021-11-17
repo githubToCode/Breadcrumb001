@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import * as moment from "moment";
+import { isEqual } from "lodash";
 
 import { breadcrumbConfig } from "./config";
 import { AppService } from "./app.service";
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit {
     [this.datepickerConfig.startKey || "start"]: moment().subtract(1, "months"),
     [this.datepickerConfig.endKey || "end"]: moment()
   };
-  breadcrumbsReqPayload: object = {};
+  breadcrumbsReqPayload: any = {};
 
   constructor(private fb: FormBuilder, private appService: AppService) {}
 
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit {
 
   getAdvertisers(): void {
     this.appService.getAdvertisers().subscribe((advertisers) => {
+      this.advertisersConfig.dropDownSettings.loading = false;
       this.advertisers = advertisers;
       this.selectedAdvertisers = [advertisers[0].id];
       this.updateReqPayload();
@@ -50,24 +52,39 @@ export class AppComponent implements OnInit {
   }
 
   getCampaigns(): void {
+    this.campaignConfig.dropDownSettings.loading = true;
+    this.campaigns = [];
     this.selectedCampaigns = [];
     this.appService
       .getCampaigns(this.breadcrumbsReqPayload)
       .subscribe((campaigns) => {
         console.log("Got New Campaigns");
+        this.campaignConfig.dropDownSettings.loading = false;
         this.campaigns = campaigns;
       });
   }
 
   onAdvertisersSelectionChange(): void {
-    this.getCampaigns();
-    this.updateReqPayload();
-    console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+    const isAdvertisersSelectionChanged = !isEqual(
+      this.selectedAdvertisers,
+      this.breadcrumbsReqPayload.advertiserUIds
+    );
+    if (isAdvertisersSelectionChanged) {
+      this.getCampaigns();
+      this.updateReqPayload();
+      console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+    }
   }
 
   onCampaignsSelectionChange(): void {
-    this.updateReqPayload();
-    console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+    const isCampaignsSelectionChanged = !isEqual(
+      this.selectedCampaigns,
+      this.breadcrumbsReqPayload.campaignUIds
+    );
+    if (isCampaignsSelectionChanged) {
+      this.updateReqPayload();
+      console.log("breadcrumbsReqPayload", this.breadcrumbsReqPayload);
+    }
   }
 
   dateRangeUpdated(): void {

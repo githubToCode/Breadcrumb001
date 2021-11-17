@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
+import { delay } from "rxjs/internal/operators";
 
 @Injectable({
   providedIn: "root"
@@ -7,7 +8,7 @@ import { Observable, of } from "rxjs";
 export class AppService {
   constructor() {}
 
-  getAdvertisers(): Observable<any[]> {
+  getAdvertisers(): any {
     const advertisers = of([
       { id: "adv001", name: "Adv One", group: "Select ALL", selected: true },
       { id: "adv002", name: "Adv Two", group: "Select ALL" },
@@ -18,7 +19,7 @@ export class AppService {
       { id: "adv007", name: "Adv Seven", group: "Select ALL" },
       { id: "adv008", name: "Adv Eight", group: "Select ALL" }
     ]);
-    return advertisers;
+    return advertisers.pipe(delay(2000));
   }
 
   getCampaigns(req): Observable<any[]> {
@@ -33,6 +34,6 @@ export class AppService {
       { id: "cmp007", name: "Cmpn Seven", group: "Select ALL" },
       { id: "cmp008", name: "Cmpn Eight", group: "Select ALL" }
     ]);
-    return campaigns;
+    return campaigns.pipe(delay(2000));
   }
 }
